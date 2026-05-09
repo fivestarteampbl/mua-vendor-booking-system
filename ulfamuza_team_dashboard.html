@@ -1,0 +1,621 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:2rem 0}
+.hero{text-align:center;margin-bottom:2.5rem}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--color-text-secondary);margin-bottom:14px}
+.hero h1{font-size:24px;font-weight:500;color:var(--color-text-primary);letter-spacing:-0.3px}
+.hero p{font-size:14px;color:var(--color-text-secondary);margin-top:6px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:380px;margin:1.5rem auto 0}
+.stat-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
+.stat-num{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:2rem}
+.tab{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:all 0.15s}
+.tab:hover{background:var(--color-background-secondary)}
+.tab-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tab.active{border-color:var(--border-c);color:var(--text-c);background:var(--bg-c)}
+.section{display:none}
+.section.active{display:block}
+.member-card{border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);overflow:hidden;margin-bottom:1.5rem}
+.member-top{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.ava{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;flex-shrink:0}
+.member-info h2{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.member-info .role{font-size:13px;color:var(--color-text-secondary);margin-top:3px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px}
+.member-stats{display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid var(--color-border-tertiary)}
+.mstat{padding:14px 20px;text-align:center}
+.mstat:first-child{border-right:0.5px solid var(--color-border-tertiary)}
+.mstat-num{font-size:28px;font-weight:500}
+.mstat-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:0.07em;text-transform:uppercase;padding:1rem 1.5rem 0.5rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.task-list{padding:0.5rem 0}
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:10px 1.5rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.task-item:last-child{border-bottom:none}
+.task-icon{width:32px;height:32px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.task-body{flex:1;min-width:0}
+.task-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.task-path{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono);margin-top:2px;word-break:break-all}
+.task-sub{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+.badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;flex-shrink:0;white-space:nowrap;margin-left:auto}
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:1rem 1.5rem}
+.flow-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px}
+.flow-step{font-size:11px;font-weight:500;margin-bottom:6px}
+.flow-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.flow-desc{font-size:11px;color:var(--color-text-secondary)}
+.flow-method{font-size:10px;font-family:var(--font-mono);margin-top:6px;padding:2px 7px;border-radius:5px;background:var(--color-background-secondary);color:var(--color-text-secondary);display:inline-block}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:2rem}
+.ov-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;cursor:pointer;transition:border-color 0.15s}
+.ov-card:hover{border-color:var(--color-border-secondary)}
+.ov-ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;margin-bottom:12px}
+.ov-name{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.ov-role{font-size:12px;color:var(--color-text-secondary);margin-top:3px;margin-bottom:14px;line-height:1.4}
+.ov-nums{display:flex;gap:16px}
+.ov-num{font-size:22px;font-weight:500}
+.ov-lbl{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:2rem 0}
+.hint{font-size:13px;color:var(--color-text-secondary);text-align:center}
+</style>
+
+<h2 class="sr-only">Dashboard pembagian tugas tim ULFAMUZA — 5 anggota, 16 use-case</h2>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-badge"><i class="ti ti-sparkles" aria-hidden="true"></i> TRPL-2D · Kelompok Tugas Akhir</div>
+    <h1>ULFAMUZA</h1>
+    <p>Sistem Informasi Wedding Organizer</p>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">Anggota</div></div>
+      <div class="stat-box"><div class="stat-num">16</div><div class="stat-lbl">Use-case</div></div>
+      <div class="stat-box"><div class="stat-num">55</div><div class="stat-lbl">File</div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" style="--border-c:var(--color-border-primary);--text-c:var(--color-text-primary);--bg-c:var(--color-background-secondary)" onclick="show('overview',this)">
+      <i class="ti ti-layout-grid" aria-hidden="true"></i> Semua
+    </button>
+    <button class="tab" style="--border-c:#534AB7;--text-c:#534AB7;--bg-c:#EEEDFE" onclick="show('yushril',this)">
+      <span class="tab-dot" style="background:#7F77DD"></span>Yushril
+    </button>
+    <button class="tab" style="--border-c:#0F6E56;--text-c:#0F6E56;--bg-c:#E1F5EE" onclick="show('nicko',this)">
+      <span class="tab-dot" style="background:#1D9E75"></span>Nicko
+    </button>
+    <button class="tab" style="--border-c:#993C1D;--text-c:#993C1D;--bg-c:#FAECE7" onclick="show('maulidin',this)">
+      <span class="tab-dot" style="background:#D85A30"></span>Maulidin
+    </button>
+    <button class="tab" style="--border-c:#185FA5;--text-c:#185FA5;--bg-c:#E6F1FB" onclick="show('azka',this)">
+      <span class="tab-dot" style="background:#378ADD"></span>Azka
+    </button>
+    <button class="tab" style="--border-c:#993556;--text-c:#993556;--bg-c:#FBEAF0" onclick="show('adelia',this)">
+      <span class="tab-dot" style="background:#D4537E"></span>Adelia
+    </button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <div class="overview-grid">
+      <div class="ov-card" onclick="showById('yushril',1)">
+        <div class="ov-ava" style="background:#EEEDFE;color:#534AB7">YH</div>
+        <div class="ov-name">Yushril Huda R.S</div>
+        <div class="ov-role">Project Lead · Super Admin Panel · Auth System</div>
+        <div class="ov-nums">
+          <div><div class="ov-num" style="color:#534AB7">5</div><div class="ov-lbl">use-case</div></div>
+          <div><div class="ov-num" style="color:#534AB7">13</div><div class="ov-lbl">file</div></div>
+        </div>
+      </div>
+      <div class="ov-card" onclick="showById('nicko',2)">
+        <div class="ov-ava" style="background:#E1F5EE;color:#0F6E56">NS</div>
+        <div class="ov-name">Nicko Sugiarto</div>
+        <div class="ov-role">Backend Developer · Kelola Konten Admin</div>
+        <div class="ov-nums">
+          <div><div class="ov-num" style="color:#0F6E56">5</div><div class="ov-lbl">use-case</div></div>
+          <div><div class="ov-num" style="color:#0F6E56">13</div><div class="ov-lbl">file</div></div>
+        </div>
+      </div>
+      <div class="ov-card" onclick="showById('maulidin',3)">
+        <div class="ov-ava" style="background:#FAECE7;color:#993C1D">AM</div>
+        <div class="ov-name">Ahmad Maulidin</div>
+        <div class="ov-role">Backend Developer · Dashboard & Laporan</div>
+        <div class="ov-nums">
+          <div><div class="ov-num" style="color:#993C1D">3</div><div class="ov-lbl">use-case</div></div>
+          <div><div class="ov-num" style="color:#993C1D">10</div><div class="ov-lbl">file</div></div>
+        </div>
+      </div>
+      <div class="ov-card" onclick="showById('azka',4)">
+        <div class="ov-ava" style="background:#E6F1FB;color:#185FA5">DNA</div>
+        <div class="ov-name">Danish Naisyila Azka</div>
+        <div class="ov-role">Frontend Developer · Alur Booking</div>
+        <div class="ov-nums">
+          <div><div class="ov-num" style="color:#185FA5">2</div><div class="ov-lbl">use-case</div></div>
+          <div><div class="ov-num" style="color:#185FA5">6</div><div class="ov-lbl">file</div></div>
+        </div>
+      </div>
+      <div class="ov-card" onclick="showById('adelia',5)">
+        <div class="ov-ava" style="background:#FBEAF0;color:#993556">AFZ</div>
+        <div class="ov-name">Adelia Fioren Zety</div>
+        <div class="ov-role">Frontend Developer · Halaman Publik</div>
+        <div class="ov-nums">
+          <div><div class="ov-num" style="color:#993556">3</div><div class="ov-lbl">use-case</div></div>
+          <div><div class="ov-num" style="color:#993556">13</div><div class="ov-lbl">file</div></div>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="hint"><i class="ti ti-cursor-text" aria-hidden="true"></i> Klik kartu untuk detail tugas masing-masing anggota</p>
+  </div>
+
+  <!-- YUSHRIL -->
+  <div id="yushril" class="section">
+    <div class="member-card">
+      <div class="member-top">
+        <div class="ava" style="background:#EEEDFE;color:#534AB7">YH</div>
+        <div class="member-info">
+          <h2>Yushril Huda Ramadhany S</h2>
+          <div class="role">Project Lead · Super Admin Panel · Auth System</div>
+          <div class="pills">
+            <span class="pill" style="background:#EEEDFE;color:#3C3489">UC-4 Auth</span>
+            <span class="pill" style="background:#EEEDFE;color:#3C3489">UC-13 Log</span>
+            <span class="pill" style="background:#EEEDFE;color:#3C3489">UC-14 Konfigurasi</span>
+            <span class="pill" style="background:#EEEDFE;color:#3C3489">UC-15 Kelola Admin</span>
+            <span class="pill" style="background:#EEEDFE;color:#3C3489">UC-16 Hak Akses</span>
+          </div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <div class="mstat"><div class="mstat-num" style="color:#534AB7">5</div><div class="mstat-lbl">use-case</div></div>
+        <div class="mstat"><div class="mstat-num" style="color:#534AB7">13</div><div class="mstat-lbl">file</div></div>
+      </div>
+      <div class="section-label"><i class="ti ti-code" aria-hidden="true"></i> Controllers</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-login" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">AdminLoginController</div>
+            <div class="task-path">Auth/AdminLoginController.php</div>
+            <div class="task-sub">showLogin · login · logout</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">Auth</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-user-check" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">CustomerAuthController</div>
+            <div class="task-path">Auth/CustomerAuthController.php</div>
+            <div class="task-sub">showLogin · login · showRegister · register · logout</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-4</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-layout-dashboard" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">DashboardController (SA)</div>
+            <div class="task-path">SuperAdmin/DashboardController.php</div>
+            <div class="task-sub">index</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">SA</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-users" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">AdminController</div>
+            <div class="task-path">SuperAdmin/AdminController.php</div>
+            <div class="task-sub">index · create · store · edit · update · destroy</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-15</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-shield-lock" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">HakAksesController</div>
+            <div class="task-path">SuperAdmin/HakAksesController.php</div>
+            <div class="task-sub">index · edit · update</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-16</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-settings" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">KonfigurasiController</div>
+            <div class="task-path">SuperAdmin/KonfigurasiController.php</div>
+            <div class="task-sub">edit · update</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-14</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-list-details" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body">
+            <div class="task-name">LogAktivitasController</div>
+            <div class="task-path">SuperAdmin/LogAktivitasController.php</div>
+            <div class="task-sub">index</div>
+          </div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-13</span>
+        </div>
+      </div>
+      <div class="section-label"><i class="ti ti-layout" aria-hidden="true"></i> Views</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-home" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Dashboard super admin</div><div class="task-path">superadmin/dashboard.blade.php</div></div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">SA</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-table" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Daftar akun admin</div><div class="task-path">superadmin/admin/index.blade.php</div></div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-15</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-forms" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Form tambah/edit admin</div><div class="task-path">superadmin/admin/form.blade.php</div></div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-15</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-key" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Form hak akses</div><div class="task-path">superadmin/hak-akses/form.blade.php</div></div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-16</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-adjustments" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Form konfigurasi sistem</div><div class="task-path">superadmin/konfigurasi/form.blade.php</div></div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-14</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#EEEDFE"><i class="ti ti-activity" style="color:#534AB7" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Log aktivitas sistem</div><div class="task-path">superadmin/log/index.blade.php</div></div>
+          <span class="badge" style="background:#EEEDFE;color:#3C3489">UC-13</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NICKO -->
+  <div id="nicko" class="section">
+    <div class="member-card">
+      <div class="member-top">
+        <div class="ava" style="background:#E1F5EE;color:#0F6E56">NS</div>
+        <div class="member-info">
+          <h2>Nicko Sugiarto</h2>
+          <div class="role">Backend Developer · Kelola Konten Admin</div>
+          <div class="pills">
+            <span class="pill" style="background:#E1F5EE;color:#085041">UC-6 Moderasi</span>
+            <span class="pill" style="background:#E1F5EE;color:#085041">UC-7 Layanan</span>
+            <span class="pill" style="background:#E1F5EE;color:#085041">UC-8 Pelanggan</span>
+            <span class="pill" style="background:#E1F5EE;color:#085041">UC-10 Galeri</span>
+            <span class="pill" style="background:#E1F5EE;color:#085041">UC-11 Notifikasi</span>
+          </div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <div class="mstat"><div class="mstat-num" style="color:#0F6E56">5</div><div class="mstat-lbl">use-case</div></div>
+        <div class="mstat"><div class="mstat-num" style="color:#0F6E56">13</div><div class="mstat-lbl">file</div></div>
+      </div>
+      <div class="section-label"><i class="ti ti-code" aria-hidden="true"></i> Controllers</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-tag" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">LayananController</div><div class="task-path">Admin/LayananController.php</div><div class="task-sub">index · create · store · edit · update · destroy</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-7</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-photo" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">GaleriController</div><div class="task-path">Admin/GaleriController.php</div><div class="task-sub">index · create · store · edit · update · destroy</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-10</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-user" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">PelangganController</div><div class="task-path">Admin/PelangganController.php</div><div class="task-sub">index · show</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-8</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-star" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">ModerasiController</div><div class="task-path">Admin/ModerasiController.php</div><div class="task-sub">index · approve · reject · destroy</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-6</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-bell" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">NotifikasiController</div><div class="task-path">Admin/NotifikasiController.php</div><div class="task-sub">index · markRead · markAllRead</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-11</span>
+        </div>
+      </div>
+      <div class="section-label"><i class="ti ti-layout" aria-hidden="true"></i> Views</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-list" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Daftar layanan katalog</div><div class="task-path">admin/layanan/index.blade.php</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-7</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-forms" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Form tambah/edit layanan</div><div class="task-path">admin/layanan/form.blade.php</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-7</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-photo" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Daftar & form galeri</div><div class="task-path">admin/galeri/index.blade.php · form.blade.php</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-10</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-users" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Daftar & detail pelanggan</div><div class="task-path">admin/pelanggan/index.blade.php · show.blade.php</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-8</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-message-circle" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Moderasi rating & komentar</div><div class="task-path">admin/moderasi/index.blade.php</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-6</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E1F5EE"><i class="ti ti-bell" style="color:#0F6E56" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Notifikasi admin</div><div class="task-path">admin/notifikasi/index.blade.php</div></div>
+          <span class="badge" style="background:#E1F5EE;color:#085041">UC-11</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAULIDIN -->
+  <div id="maulidin" class="section">
+    <div class="member-card">
+      <div class="member-top">
+        <div class="ava" style="background:#FAECE7;color:#993C1D">AM</div>
+        <div class="member-info">
+          <h2>Ahmad Maulidin</h2>
+          <div class="role">Backend Developer · Dashboard, Booking & Laporan Admin</div>
+          <div class="pills">
+            <span class="pill" style="background:#FAECE7;color:#712B13">UC-5 Laporan & Statistik</span>
+            <span class="pill" style="background:#FAECE7;color:#712B13">UC-9 Status Booking</span>
+            <span class="pill" style="background:#FAECE7;color:#712B13">UC-12 Kalender</span>
+          </div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <div class="mstat"><div class="mstat-num" style="color:#993C1D">3</div><div class="mstat-lbl">use-case</div></div>
+        <div class="mstat"><div class="mstat-num" style="color:#993C1D">10</div><div class="mstat-lbl">file</div></div>
+      </div>
+      <div class="section-label"><i class="ti ti-code" aria-hidden="true"></i> Controllers</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-chart-bar" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">DashboardController</div><div class="task-path">Admin/DashboardController.php</div><div class="task-sub">index</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-5</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-calendar-event" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">BookingController</div><div class="task-path">Admin/BookingController.php</div><div class="task-sub">index · show · updateStatus</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-9</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-file-analytics" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">LaporanController</div><div class="task-path">Admin/LaporanController.php</div><div class="task-sub">index · export</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-5</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-calendar" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">KalenderController</div><div class="task-path">Admin/KalenderController.php</div><div class="task-sub">index · getEvents</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-12</span>
+        </div>
+      </div>
+      <div class="section-label"><i class="ti ti-layout" aria-hidden="true"></i> Views & Components</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-template" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Master layout admin</div><div class="task-path">layouts/admin.blade.php</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">Layout</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-layout-sidebar" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Sidebar navigasi admin</div><div class="task-path">components/sidebar-admin.blade.php</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">Comp.</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-report-analytics" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Card statistik + notif item</div><div class="task-path">components/stat-card.blade.php · notification-item.blade.php</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">Comp.</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-layout-dashboard" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Login & dashboard admin</div><div class="task-path">admin/auth/login.blade.php · admin/dashboard.blade.php</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-5</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-checklist" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Daftar & detail booking</div><div class="task-path">admin/booking/index.blade.php · show.blade.php</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-9</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FAECE7"><i class="ti ti-chart-pie" style="color:#993C1D" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Laporan & kalender jadwal</div><div class="task-path">admin/laporan/index.blade.php · admin/kalender/index.blade.php</div></div>
+          <span class="badge" style="background:#FAECE7;color:#712B13">UC-5/12</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AZKA -->
+  <div id="azka" class="section">
+    <div class="member-card">
+      <div class="member-top">
+        <div class="ava" style="background:#E6F1FB;color:#185FA5">DNA</div>
+        <div class="member-info">
+          <h2>Danish Naisyila Azka</h2>
+          <div class="role">Frontend Developer · Alur Booking Customer</div>
+          <div class="pills">
+            <span class="pill" style="background:#E6F1FB;color:#0C447C">UC-3 Melakukan Booking</span>
+            <span class="pill" style="background:#E6F1FB;color:#0C447C">UC-1 Pricelist</span>
+          </div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <div class="mstat"><div class="mstat-num" style="color:#185FA5">2</div><div class="mstat-lbl">use-case</div></div>
+        <div class="mstat"><div class="mstat-num" style="color:#185FA5">6</div><div class="mstat-lbl">file</div></div>
+      </div>
+      <div class="section-label"><i class="ti ti-code" aria-hidden="true"></i> Controllers</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-calendar-plus" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">BookingController (Customer)</div><div class="task-path">Customer/BookingController.php</div><div class="task-sub">create · store · pembayaran · uploadBukti · konfirmasi</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">UC-3</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-receipt" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">PricelistController</div><div class="task-path">Customer/PricelistController.php</div><div class="task-sub">index</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">UC-1</span>
+        </div>
+      </div>
+      <div class="section-label"><i class="ti ti-git-branch" aria-hidden="true"></i> Alur UC-3 — 4 langkah booking</div>
+      <div class="flow-grid">
+        <div class="flow-card">
+          <div class="flow-step" style="color:#185FA5">Langkah 1</div>
+          <div class="flow-name">Form booking</div>
+          <div class="flow-desc">Input email, tanggal, layanan, pricelist</div>
+          <div class="flow-method">POST /booking</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-step" style="color:#185FA5">Langkah 2</div>
+          <div class="flow-name">Halaman pembayaran</div>
+          <div class="flow-desc">Detail & instruksi transfer rekening</div>
+          <div class="flow-method">GET /booking/{id}/pembayaran</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-step" style="color:#185FA5">Langkah 3</div>
+          <div class="flow-name">Upload bukti</div>
+          <div class="flow-desc">Upload gambar bukti transfer (maks 2 MB)</div>
+          <div class="flow-method">POST /booking/{id}/bukti</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-step" style="color:#185FA5">Langkah 4</div>
+          <div class="flow-name">Konfirmasi booking</div>
+          <div class="flow-desc">Tampilkan status & nomor booking</div>
+          <div class="flow-method">GET /booking/{id}/konfirmasi</div>
+        </div>
+      </div>
+      <div class="section-label" style="margin-top:0"><i class="ti ti-layout" aria-hidden="true"></i> Views</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-forms" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Form input booking</div><div class="task-path">customer/booking/form.blade.php</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">UC-3</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-upload" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Pembayaran & upload bukti</div><div class="task-path">customer/booking/pembayaran.blade.php</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">UC-3</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-circle-check" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Konfirmasi / status booking</div><div class="task-path">customer/booking/konfirmasi.blade.php</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">UC-3</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-receipt" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Halaman pricelist</div><div class="task-path">customer/katalog/pricelist.blade.php</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">UC-1</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#E6F1FB"><i class="ti ti-badge" style="color:#185FA5" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Badge status booking</div><div class="task-path">components/badge-status.blade.php</div></div>
+          <span class="badge" style="background:#E6F1FB;color:#0C447C">Comp.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADELIA -->
+  <div id="adelia" class="section">
+    <div class="member-card">
+      <div class="member-top">
+        <div class="ava" style="background:#FBEAF0;color:#993556">AFZ</div>
+        <div class="member-info">
+          <h2>Adelia Fioren Zety</h2>
+          <div class="role">Frontend Developer · Halaman Publik Customer</div>
+          <div class="pills">
+            <span class="pill" style="background:#FBEAF0;color:#72243E">UC-1 Katalog & Pricelist</span>
+            <span class="pill" style="background:#FBEAF0;color:#72243E">UC-2 Galeri</span>
+            <span class="pill" style="background:#FBEAF0;color:#72243E">UC-4 Auth Customer</span>
+          </div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <div class="mstat"><div class="mstat-num" style="color:#993556">3</div><div class="mstat-lbl">use-case</div></div>
+        <div class="mstat"><div class="mstat-num" style="color:#993556">13</div><div class="mstat-lbl">file</div></div>
+      </div>
+      <div class="section-label"><i class="ti ti-code" aria-hidden="true"></i> Controllers</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-home" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">HomeController</div><div class="task-path">Customer/HomeController.php</div><div class="task-sub">index</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">Landing</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-tag" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">KatalogController</div><div class="task-path">Customer/KatalogController.php</div><div class="task-sub">index · show</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">UC-1</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-photo" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">GaleriController (Customer)</div><div class="task-path">Customer/GaleriController.php</div><div class="task-sub">index</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">UC-2</span>
+        </div>
+      </div>
+      <div class="section-label"><i class="ti ti-layout" aria-hidden="true"></i> Views & Components</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-template" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Master layout customer</div><div class="task-path">layouts/app.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">Layout</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-menu-2" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Navbar & footer publik</div><div class="task-path">components/navbar.blade.php · footer.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">Comp.</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-layout-cards" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Card layanan, paket & galeri</div><div class="task-path">components/card-layanan · card-paket · card-galeri.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">Comp.</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-login" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Login & register customer</div><div class="task-path">customer/auth/login.blade.php · register.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">UC-4</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-home" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Landing page / beranda</div><div class="task-path">customer/home/index.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">Home</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-list" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Daftar katalog layanan</div><div class="task-path">customer/katalog/index.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">UC-1</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-file-description" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Detail layanan + paket</div><div class="task-path">customer/katalog/show.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">UC-1</span>
+        </div>
+        <div class="task-item">
+          <div class="task-icon" style="background:#FBEAF0"><i class="ti ti-photo" style="color:#993556" aria-hidden="true"></i></div>
+          <div class="task-body"><div class="task-name">Galeri vendor</div><div class="task-path">customer/galeri/index.blade.php</div></div>
+          <span class="badge" style="background:#FBEAF0;color:#72243E">UC-2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const allTabs = document.querySelectorAll('.tab');
+function show(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  allTabs.forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+function showById(id, idx) {
+  show(id, allTabs[idx]);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
