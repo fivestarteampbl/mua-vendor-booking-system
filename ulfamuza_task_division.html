@@ -1,0 +1,539 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.page { padding: 1.5rem 0; }
+.header { text-align: center; margin-bottom: 2rem; }
+.header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.header p { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
+.tab { padding: 7px 18px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
+.tab:hover { background: var(--color-background-secondary); }
+.tab.active { background: var(--color-background-primary); color: var(--color-text-primary); border-color: var(--color-border-primary); }
+.tab.active.purple { border-color: #7F77DD; color: #534AB7; background: #EEEDFE; }
+.tab.active.teal { border-color: #1D9E75; color: #0F6E56; background: #E1F5EE; }
+.tab.active.coral { border-color: #D85A30; color: #993C1D; background: #FAECE7; }
+.tab.active.blue { border-color: #378ADD; color: #185FA5; background: #E6F1FB; }
+.tab.active.pink { border-color: #D4537E; color: #993556; background: #FBEAF0; }
+.section { display: none; }
+.section.active { display: block; }
+.member-header { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; padding: 1.25rem; border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); }
+.avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; flex-shrink: 0; }
+.avatar.purple { background: #EEEDFE; color: #534AB7; }
+.avatar.teal { background: #E1F5EE; color: #0F6E56; }
+.avatar.coral { background: #FAECE7; color: #993C1D; }
+.avatar.blue { background: #E6F1FB; color: #185FA5; }
+.avatar.pink { background: #FBEAF0; color: #993556; }
+.member-meta h2 { font-size: 17px; font-weight: 500; color: var(--color-text-primary); }
+.member-meta p { font-size: 13px; color: var(--color-text-secondary); margin-top: 3px; }
+.uc-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.uc-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; }
+.uc-pill.purple { background: #EEEDFE; color: #534AB7; }
+.uc-pill.teal { background: #E1F5EE; color: #0F6E56; }
+.uc-pill.coral { background: #FAECE7; color: #993C1D; }
+.uc-pill.blue { background: #E6F1FB; color: #185FA5; }
+.uc-pill.pink { background: #FBEAF0; color: #993556; }
+.section-title { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; margin-top: 1.5rem; }
+.task-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.task-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 14px; }
+.task-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.task-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; }
+.uc-badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
+.uc-badge.purple { background: #EEEDFE; color: #534AB7; }
+.uc-badge.teal { background: #E1F5EE; color: #0F6E56; }
+.uc-badge.coral { background: #FAECE7; color: #993C1D; }
+.uc-badge.blue { background: #E6F1FB; color: #185FA5; }
+.uc-badge.pink { background: #FBEAF0; color: #993556; }
+.task-path { font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-mono); line-height: 1.4; word-break: break-all; }
+.task-type { display: inline-block; font-size: 10px; margin-top: 6px; color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 6px; padding: 1px 7px; }
+.overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+.overview-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+.overview-card:hover { border-color: var(--color-border-secondary); }
+.overview-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+.overview-avatar.purple { background: #EEEDFE; color: #534AB7; }
+.overview-avatar.teal { background: #E1F5EE; color: #0F6E56; }
+.overview-avatar.coral { background: #FAECE7; color: #993C1D; }
+.overview-avatar.blue { background: #E6F1FB; color: #185FA5; }
+.overview-avatar.pink { background: #FBEAF0; color: #993556; }
+.overview-card h3 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.overview-card .role { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; margin-bottom: 10px; }
+.count-row { display: flex; gap: 12px; }
+.count-item { text-align: center; }
+.count-num { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.count-label { font-size: 10px; color: var(--color-text-secondary); }
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
+@media (max-width: 500px) { .task-grid { grid-template-columns: 1fr; } }
+</style>
+
+<h2 class="sr-only">Pembagian tugas anggota tim ULFAMUZA — klik tab untuk melihat file dan use-case masing-masing anggota</h2>
+
+<div class="page">
+  <div class="header">
+    <h1>💄 ULFAMUZA — Pembagian Tugas Tim</h1>
+    <p>Kelas TRPL-2D · 5 anggota · 16 use-case MVP</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('overview', this)">Semua</button>
+    <button class="tab purple" onclick="showTab('yushril', this)">Yushril</button>
+    <button class="tab teal" onclick="showTab('nicko', this)">Nicko</button>
+    <button class="tab coral" onclick="showTab('maulidin', this)">Maulidin</button>
+    <button class="tab blue" onclick="showTab('azka', this)">Azka</button>
+    <button class="tab pink" onclick="showTab('adelia', this)">Adelia</button>
+  </div>
+
+  <div id="overview" class="section active">
+    <div class="overview-grid">
+      <div class="overview-card" onclick="showTabById('yushril', 0)">
+        <div class="overview-avatar purple">YH</div>
+        <h3>Yushril Huda R.S</h3>
+        <div class="role">Project Lead · Super Admin Panel</div>
+        <div class="count-row">
+          <div class="count-item"><div class="count-num" style="color:#534AB7">4</div><div class="count-label">UC</div></div>
+          <div class="count-item"><div class="count-num" style="color:#534AB7">7</div><div class="count-label">file</div></div>
+        </div>
+      </div>
+      <div class="overview-card" onclick="showTabById('nicko', 1)">
+        <div class="overview-avatar teal">NS</div>
+        <h3>Nicko Sugiarto</h3>
+        <div class="role">Backend · Konten Admin</div>
+        <div class="count-row">
+          <div class="count-item"><div class="count-num" style="color:#0F6E56">5</div><div class="count-label">UC</div></div>
+          <div class="count-item"><div class="count-num" style="color:#0F6E56">10</div><div class="count-label">file</div></div>
+        </div>
+      </div>
+      <div class="overview-card" onclick="showTabById('maulidin', 2)">
+        <div class="overview-avatar coral">AM</div>
+        <h3>Ahmad Maulidin</h3>
+        <div class="role">Backend · Dashboard Admin</div>
+        <div class="count-row">
+          <div class="count-item"><div class="count-num" style="color:#993C1D">3</div><div class="count-label">UC</div></div>
+          <div class="count-item"><div class="count-num" style="color:#993C1D">10</div><div class="count-label">file</div></div>
+        </div>
+      </div>
+      <div class="overview-card" onclick="showTabById('azka', 3)">
+        <div class="overview-avatar blue">DNA</div>
+        <h3>Danish Naisyila Azka</h3>
+        <div class="role">Frontend · Booking Customer</div>
+        <div class="count-row">
+          <div class="count-item"><div class="count-num" style="color:#185FA5">2</div><div class="count-label">UC</div></div>
+          <div class="count-item"><div class="count-num" style="color:#185FA5">4</div><div class="count-label">file</div></div>
+        </div>
+      </div>
+      <div class="overview-card" onclick="showTabById('adelia', 4)">
+        <div class="overview-avatar pink">AFZ</div>
+        <h3>Adelia Fioren Zety</h3>
+        <div class="role">Frontend · Halaman Publik</div>
+        <div class="count-row">
+          <div class="count-item"><div class="count-num" style="color:#993556">3</div><div class="count-label">UC</div></div>
+          <div class="count-item"><div class="count-num" style="color:#993556">13</div><div class="count-label">file</div></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <p style="font-size:13px; color:var(--color-text-secondary); text-align:center;">Klik kartu untuk melihat detail tugas masing-masing anggota</p>
+  </div>
+
+  <div id="yushril" class="section">
+    <div class="member-header">
+      <div class="avatar purple">YH</div>
+      <div class="member-meta">
+        <h2>Yushril Huda Ramadhany S</h2>
+        <p>Project Lead · Super Admin Panel · Auth System</p>
+        <div class="uc-pills">
+          <span class="uc-pill purple">UC-13 Log Aktivitas</span>
+          <span class="uc-pill purple">UC-14 Konfigurasi</span>
+          <span class="uc-pill purple">UC-15 Kelola Admin</span>
+          <span class="uc-pill purple">UC-16 Hak Akses</span>
+          <span class="uc-pill purple">UC-4 Auth</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Controllers</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">AdminLoginController</span><span class="uc-badge purple">Auth</span></div>
+        <div class="task-path">Auth/AdminLoginController.php</div>
+        <span class="task-type">showLogin · login · logout</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">CustomerAuthController</span><span class="uc-badge purple">UC-4</span></div>
+        <div class="task-path">Auth/CustomerAuthController.php</div>
+        <span class="task-type">login · register · logout</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">AdminController</span><span class="uc-badge purple">UC-15</span></div>
+        <div class="task-path">SuperAdmin/AdminController.php</div>
+        <span class="task-type">index · create · store · edit · update · destroy</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">HakAksesController</span><span class="uc-badge purple">UC-16</span></div>
+        <div class="task-path">SuperAdmin/HakAksesController.php</div>
+        <span class="task-type">index · edit · update</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">KonfigurasiController</span><span class="uc-badge purple">UC-14</span></div>
+        <div class="task-path">SuperAdmin/KonfigurasiController.php</div>
+        <span class="task-type">edit · update</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">LogAktivitasController</span><span class="uc-badge purple">UC-13</span></div>
+        <div class="task-path">SuperAdmin/LogAktivitasController.php</div>
+        <span class="task-type">index</span>
+      </div>
+    </div>
+
+    <div class="section-title">Views</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Dashboard Super Admin</span><span class="uc-badge purple">SA</span></div>
+        <div class="task-path">superadmin/dashboard.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Daftar akun admin</span><span class="uc-badge purple">UC-15</span></div>
+        <div class="task-path">superadmin/admin/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Form tambah/edit admin</span><span class="uc-badge purple">UC-15</span></div>
+        <div class="task-path">superadmin/admin/form.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Form hak akses</span><span class="uc-badge purple">UC-16</span></div>
+        <div class="task-path">superadmin/hak-akses/form.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Form konfigurasi</span><span class="uc-badge purple">UC-14</span></div>
+        <div class="task-path">superadmin/konfigurasi/form.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Log aktivitas sistem</span><span class="uc-badge purple">UC-13</span></div>
+        <div class="task-path">superadmin/log/index.blade.php</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="nicko" class="section">
+    <div class="member-header">
+      <div class="avatar teal">NS</div>
+      <div class="member-meta">
+        <h2>Nicko Sugiarto</h2>
+        <p>Backend Developer · Kelola Konten Admin</p>
+        <div class="uc-pills">
+          <span class="uc-pill teal">UC-6 Moderasi</span>
+          <span class="uc-pill teal">UC-7 Layanan</span>
+          <span class="uc-pill teal">UC-8 Pelanggan</span>
+          <span class="uc-pill teal">UC-10 Galeri</span>
+          <span class="uc-pill teal">UC-11 Notifikasi</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Controllers</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">LayananController</span><span class="uc-badge teal">UC-7</span></div>
+        <div class="task-path">Admin/LayananController.php</div>
+        <span class="task-type">index · create · store · edit · update · destroy</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">GaleriController</span><span class="uc-badge teal">UC-10</span></div>
+        <div class="task-path">Admin/GaleriController.php</div>
+        <span class="task-type">index · create · store · edit · update · destroy</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">PelangganController</span><span class="uc-badge teal">UC-8</span></div>
+        <div class="task-path">Admin/PelangganController.php</div>
+        <span class="task-type">index · show</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">ModerasiController</span><span class="uc-badge teal">UC-6</span></div>
+        <div class="task-path">Admin/ModerasiController.php</div>
+        <span class="task-type">index · approve · reject · destroy</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">NotifikasiController</span><span class="uc-badge teal">UC-11</span></div>
+        <div class="task-path">Admin/NotifikasiController.php</div>
+        <span class="task-type">index · markRead · markAllRead</span>
+      </div>
+    </div>
+
+    <div class="section-title">Views</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Daftar layanan katalog</span><span class="uc-badge teal">UC-7</span></div>
+        <div class="task-path">admin/layanan/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Form tambah/edit layanan</span><span class="uc-badge teal">UC-7</span></div>
+        <div class="task-path">admin/layanan/form.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Daftar galeri layanan</span><span class="uc-badge teal">UC-10</span></div>
+        <div class="task-path">admin/galeri/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Form tambah/edit galeri</span><span class="uc-badge teal">UC-10</span></div>
+        <div class="task-path">admin/galeri/form.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Daftar data pelanggan</span><span class="uc-badge teal">UC-8</span></div>
+        <div class="task-path">admin/pelanggan/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Detail pelanggan</span><span class="uc-badge teal">UC-8</span></div>
+        <div class="task-path">admin/pelanggan/show.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Moderasi rating & komentar</span><span class="uc-badge teal">UC-6</span></div>
+        <div class="task-path">admin/moderasi/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Notifikasi admin</span><span class="uc-badge teal">UC-11</span></div>
+        <div class="task-path">admin/notifikasi/index.blade.php</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="maulidin" class="section">
+    <div class="member-header">
+      <div class="avatar coral">AM</div>
+      <div class="member-meta">
+        <h2>Ahmad Maulidin</h2>
+        <p>Backend Developer · Dashboard, Booking & Laporan Admin</p>
+        <div class="uc-pills">
+          <span class="uc-pill coral">UC-5 Laporan & Statistik</span>
+          <span class="uc-pill coral">UC-9 Status Booking</span>
+          <span class="uc-pill coral">UC-12 Kalender</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Controllers</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">DashboardController</span><span class="uc-badge coral">UC-5</span></div>
+        <div class="task-path">Admin/DashboardController.php</div>
+        <span class="task-type">index</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">BookingController</span><span class="uc-badge coral">UC-9</span></div>
+        <div class="task-path">Admin/BookingController.php</div>
+        <span class="task-type">index · show · updateStatus</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">LaporanController</span><span class="uc-badge coral">UC-5</span></div>
+        <div class="task-path">Admin/LaporanController.php</div>
+        <span class="task-type">index · export</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">KalenderController</span><span class="uc-badge coral">UC-12</span></div>
+        <div class="task-path">Admin/KalenderController.php</div>
+        <span class="task-type">index · getEvents</span>
+      </div>
+    </div>
+
+    <div class="section-title">Views</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Master layout admin</span><span class="uc-badge coral">Layout</span></div>
+        <div class="task-path">layouts/admin.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Sidebar navigasi admin</span><span class="uc-badge coral">Comp.</span></div>
+        <div class="task-path">components/sidebar-admin.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Card statistik</span><span class="uc-badge coral">Comp.</span></div>
+        <div class="task-path">components/stat-card.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Item notifikasi</span><span class="uc-badge coral">Comp.</span></div>
+        <div class="task-path">components/notification-item.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Login admin</span><span class="uc-badge coral">Auth</span></div>
+        <div class="task-path">admin/auth/login.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Dashboard admin</span><span class="uc-badge coral">UC-5</span></div>
+        <div class="task-path">admin/dashboard.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Daftar semua booking</span><span class="uc-badge coral">UC-9</span></div>
+        <div class="task-path">admin/booking/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Detail booking</span><span class="uc-badge coral">UC-9</span></div>
+        <div class="task-path">admin/booking/show.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Laporan & statistik</span><span class="uc-badge coral">UC-5</span></div>
+        <div class="task-path">admin/laporan/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Kalender jadwal</span><span class="uc-badge coral">UC-12</span></div>
+        <div class="task-path">admin/kalender/index.blade.php</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="azka" class="section">
+    <div class="member-header">
+      <div class="avatar blue">DNA</div>
+      <div class="member-meta">
+        <h2>Danish Naisyila Azka</h2>
+        <p>Frontend Developer · Alur Booking Customer</p>
+        <div class="uc-pills">
+          <span class="uc-pill blue">UC-3 Melakukan Booking</span>
+          <span class="uc-pill blue">UC-1 Pricelist</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Controllers</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">BookingController (Customer)</span><span class="uc-badge blue">UC-3</span></div>
+        <div class="task-path">Customer/BookingController.php</div>
+        <span class="task-type">create · store · pembayaran · uploadBukti · konfirmasi</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">PricelistController</span><span class="uc-badge blue">UC-1</span></div>
+        <div class="task-path">Customer/PricelistController.php</div>
+        <span class="task-type">index</span>
+      </div>
+    </div>
+
+    <div class="section-title">Views</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Form input booking</span><span class="uc-badge blue">UC-3</span></div>
+        <div class="task-path">customer/booking/form.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Halaman pembayaran</span><span class="uc-badge blue">UC-3</span></div>
+        <div class="task-path">customer/booking/pembayaran.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Konfirmasi booking</span><span class="uc-badge blue">UC-3</span></div>
+        <div class="task-path">customer/booking/konfirmasi.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Badge status booking</span><span class="uc-badge blue">Comp.</span></div>
+        <div class="task-path">components/badge-status.blade.php</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="adelia" class="section">
+    <div class="member-header">
+      <div class="avatar pink">AFZ</div>
+      <div class="member-meta">
+        <h2>Adelia Fioren Zety</h2>
+        <p>Frontend Developer · Halaman Publik Customer</p>
+        <div class="uc-pills">
+          <span class="uc-pill pink">UC-1 Katalog & Pricelist</span>
+          <span class="uc-pill pink">UC-2 Galeri</span>
+          <span class="uc-pill pink">UC-4 Auth Customer</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Controllers</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">HomeController</span><span class="uc-badge pink">Landing</span></div>
+        <div class="task-path">Customer/HomeController.php</div>
+        <span class="task-type">index</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">KatalogController</span><span class="uc-badge pink">UC-1</span></div>
+        <div class="task-path">Customer/KatalogController.php</div>
+        <span class="task-type">index · show</span>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">GaleriController (Customer)</span><span class="uc-badge pink">UC-2</span></div>
+        <div class="task-path">Customer/GaleriController.php</div>
+        <span class="task-type">index</span>
+      </div>
+    </div>
+
+    <div class="section-title">Views</div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Master layout customer</span><span class="uc-badge pink">Layout</span></div>
+        <div class="task-path">layouts/app.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Navbar publik</span><span class="uc-badge pink">Comp.</span></div>
+        <div class="task-path">components/navbar.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Footer publik</span><span class="uc-badge pink">Comp.</span></div>
+        <div class="task-path">components/footer.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Card katalog layanan</span><span class="uc-badge pink">Comp.</span></div>
+        <div class="task-path">components/card-layanan.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Card pilihan paket</span><span class="uc-badge pink">Comp.</span></div>
+        <div class="task-path">components/card-paket.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Card foto galeri</span><span class="uc-badge pink">Comp.</span></div>
+        <div class="task-path">components/card-galeri.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Login customer</span><span class="uc-badge pink">UC-4</span></div>
+        <div class="task-path">customer/auth/login.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Register customer</span><span class="uc-badge pink">UC-4</span></div>
+        <div class="task-path">customer/auth/register.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Landing page / beranda</span><span class="uc-badge pink">Home</span></div>
+        <div class="task-path">customer/home/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Daftar katalog layanan</span><span class="uc-badge pink">UC-1</span></div>
+        <div class="task-path">customer/katalog/index.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Detail layanan + paket</span><span class="uc-badge pink">UC-1</span></div>
+        <div class="task-path">customer/katalog/show.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Halaman pricelist</span><span class="uc-badge pink">UC-1</span></div>
+        <div class="task-path">customer/katalog/pricelist.blade.php</div>
+      </div>
+      <div class="task-card">
+        <div class="task-card-top"><span class="task-name">Galeri vendor</span><span class="uc-badge pink">UC-2</span></div>
+        <div class="task-path">customer/galeri/index.blade.php</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const colors = ['', 'purple', 'teal', 'coral', 'blue', 'pink'];
+
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  tabs.forEach((t, i) => {
+    t.classList.remove('active');
+    if (t === el) t.classList.add('active');
+  });
+}
+
+function showTabById(id, idx) {
+  const tab = tabs[idx + 1];
+  showTab(id, tab);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
