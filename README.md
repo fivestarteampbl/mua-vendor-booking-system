@@ -6,47 +6,51 @@
 
 ## 📋 Tentang Proyek
 
-**ULFAMUZA** adalah platform pemesanan layanan MUA dan vendor acara yang memungkinkan pelanggan untuk melihat katalog layanan, melihat galeri, serta melakukan booking secara online dengan konfirmasi pembayaran digital.
+**ULFAMUZA** adalah sistem informasi berbasis web yang dirancang untuk membantu proses promosi dan pemesanan layanan Make Up Artist (MUA) serta vendor acara milik Ulfa Muzayyina di Banyuwangi.
 
-Sistem ini dibangun oleh **Tim FiveStarTeam** — Kelas TRPL-2D, di bawah bimbingan **Lutfi Hakim, S.Pd., M.T.**, untuk client **Ulfa Muzayyina**.
+Sistem ini memungkinkan pelanggan untuk melihat katalog layanan, pricelist, galeri hasil makeup, hingga melakukan booking layanan secara online dengan lebih mudah dan efisien. Selain itu, pelanggan juga dapat memberikan rating dan komentar sebagai bentuk testimoni terhadap layanan yang telah digunakan.
+
+Di sisi admin, sistem menyediakan fitur pengelolaan data layanan, galeri katalog, status booking pelanggan, serta moderasi komentar dan rating agar informasi yang ditampilkan tetap terorganisir dengan baik.
+
+Dengan adanya sistem ini, proses pemesanan layanan MUA yang sebelumnya dilakukan secara manual melalui chat dapat menjadi lebih terstruktur, cepat, dan mudah diakses oleh pelanggan kapan saja.
+
+Sistem ini dikembangkan oleh **Tim FiveStarTeam** kelas TRPL-2D di bawah bimbingan **Lutfi Hakim, S.Pd., M.T.** untuk client **Ulfa Muzayyina**.
 
 ### Tim Pengembang
 
-| No | Nama | Role |
+| No | Nama | Pembagian Tugas |
 |---|---|---|
-| 1 | Yushril Huda Ramadhany S | Project Lead / Super Admin Panel |
-| 2 | Nicko Sugiarto | Backend & Konten Admin |
-| 3 | Ahmad Maulidin | Backend & Dashboard Admin |
-| 4 | Danish Naisyila Azka | Frontend Booking Customer |
-| 5 | Adelia Fioren Zety | Frontend Halaman Publik Customer |
+| 1 | Yushril Huda Ramadhany S | Melihat Laporan & Statistik Booking, Login & Logout |
+| 2 | Nicko Sugiarto | Mengelola Layanan Katalog, Mengelola Galeri Katalog |
+| 3 | Ahmad Maulidin | Mengelola Data Layanan Pengguna, Mengelola Status Booking, Moderasi Rating & Komentar |
+| 4 | Danish Naisyila Azka | Melakukan Booking Layanan, Redirect ke WhatsApp |
+| 5 | Adelia Fioren Zety | Melihat Layanan Katalog, Melihat Pricelist, Melihat Galeri Vendor, Melihat Testimoni Katalog |
 
 ---
 
 ## 🗺️ Cakupan MVP
 
-Sistem memiliki **3 aktor** dan **16 use-case** inti:
+Sistem memiliki **2 aktor** dan **11 use-case** inti:
 
 ### 👤 Pengguna (Customer)
-- Melihat Layanan Katalog & Pricelist
+
+- Melihat Layanan Katalog
+- Melihat Pricelist
 - Melihat Galeri Vendor
-- Melakukan Booking (form → pembayaran → konfirmasi)
-- Login & Register
+- Melihat Testimoni Katalog
+- Melakukan Booking Layanan
+- Redirect ke WhatsApp
+- Memberikan Rating & Komentar
 
 ### 🛠️ Admin
-- Dashboard & Statistik Booking
-- Mengelola Status Booking
-- Mengelola Layanan Katalog
-- Mengelola Galeri Layanan
-- Mengelola Data Pelanggan
-- Moderasi Rating & Komentar
-- Notifikasi
-- Kalender Jadwal
 
-### 👑 Super Admin
-- Mengelola Akun Admin
-- Mengatur Hak Akses & Role
-- Mengatur Konfigurasi Website
-- Melihat Log Aktivitas Sistem
+- Login & Logout
+- Melihat Laporan & Statistik Booking
+- Moderasi Rating & Komentar
+- Mengelola Layanan Katalog
+- Mengelola Data Layanan Pengguna
+- Mengelola Status Booking
+- Mengelola Galeri Katalog
 
 ---
 
@@ -91,7 +95,7 @@ Sistem memiliki **3 aktor** dan **16 use-case** inti:
 
 **1. Clone repositori**
 ```bash
-git clone https://github.com/nama-org/ulfamuza.git
+git clone https://github.com/fivestarteampbl/mua-vendor-booking-system.git
 cd ulfamuza
 ```
 
@@ -204,9 +208,8 @@ server {
 
 | Role | Deskripsi Akses |
 |---|---|
-| **Pengguna / Customer** | Lihat katalog, galeri, pricelist; booking & pembayaran |
+| **Pengguna / Customer** | Lihat katalog, galeri, testimoni, pricelist; booking & pembayaran, memberikan Rating & Komentar |
 | **Admin** | Kelola booking, layanan, galeri, pelanggan; moderasi rating & komentar; notifikasi; kalender |
-| **Super Admin** | Semua akses Admin + kelola akun admin, hak akses, konfigurasi website, log aktivitas |
 
 ---
 
